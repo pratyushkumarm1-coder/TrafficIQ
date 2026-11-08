@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TrafficIQ — Intelligent Traffic Safety System</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" rel="stylesheet">
+    <link href="css/styles.css" rel="stylesheet">
+</head>
+<body>
+
+<div id="riskBanner" class="risk-banner d-none">
+    <span class="pulse-dot"></span>
+    <span id="riskBannerText"></span>
+</div>
+
+<nav class="topbar">
+    <div class="brand">
+        <svg viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="#22d3ee" stroke-width="2">
+            <rect x="7" y="2" width="10" height="20" rx="3"/>
+            <circle cx="12" cy="7" r="1.6" fill="#f87171" stroke="none"/>
+            <circle cx="12" cy="12" r="1.6" fill="#fbbf24" stroke="none"/>
+            <circle cx="12" cy="17" r="1.6" fill="#34d399" stroke="none"/>
+        </svg>
+        <div>
+            <div class="brand-name">TrafficIQ</div>
+            <div class="brand-sub">Intelligent Traffic Safety System</div>
+        </div>
+    </div>
+    <div class="topbar-right">
+        <span id="connPill" class="conn-pill online"><span class="dot"></span>Connected</span>
+        <span id="clock" class="clock"></span>
+    </div>
+</nav>
+
+<main class="container-fluid px-4 py-3">
+
+    <section class="kpi-row">
+        <div class="kpi-card">
+            <div class="kpi-label">Vehicles Detected</div>
+            <div class="kpi-value" id="kpiVehicles">0</div>
+        </div>
+        <div class="kpi-card">
+            <div class="kpi-label">Average Speed</div>
+            <div class="kpi-value"><span id="kpiSpeed">0</span><small> km/h</small></div>
+        </div>
+        <div class="kpi-card">
+            <div class="kpi-label">Traffic Status</div>
+            <div class="kpi-value"><span id="kpiStatus" class="status-badge ok">NORMAL</span></div>
+        </div>
+        <div class="kpi-card">
+            <div class="kpi-label">Traffic Risk</div>
+            <div class="kpi-value"><span id="kpiRisk" class="status-badge ok">LOW</span></div>
+        </div>
+        <div class="kpi-card kpi-weather">
+            <div class="kpi-label">Weather · <span id="kpiCity">--</span></div>
+            <div class="d-flex align-items-center gap-2">
+                <img id="weatherIcon" src="" alt="" style="display:none;width:42px;height:42px;">
+                <div>
+                    <div class="kpi-value"><span id="kpiTemp">--</span><small> °C</small></div>
+                    <div class="kpi-desc" id="kpiWeatherDesc">waiting…</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <div class="row g-3 mt-1">
+        <div class="col-lg-8">
+            <div class="panel h-100">
+                <div class="panel-head">
+                    <h6>Live Camera Feed</h6>
+                    <span class="live-tag"><span class="live-dot"></span>LIVE · Link Road Junction</span>
+                </div>
+                <div class="video-wrap">
+                    <img id="videoStream" src="http://localhost:8000/video_feed" alt="stream offline">
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-4 d-flex flex-column gap-3">
+            <div class="panel">
+                <div class="panel-head"><h6>Risk Assessment</h6></div>
+                <div class="panel-body">
+                    <div class="risk-big" id="riskLevelBig">LOW</div>
+                    <div class="risk-meter">
+                        <div class="risk-meter-fill" id="riskMeterFill"></div>
+                    </div>
+                    <div class="risk-scale"><span>safe</span><span>severe</span></div>
+                    <p class="advisory" id="riskAdvisory">Roads are safe</p>
+                    <div class="risk-breakdown" id="riskBreakdown"></div>
+                </div>
+            </div>
+
+            <div class="panel flex-grow-1">
+                <div class="panel-head"><h6>Conditions</h6></div>
+                <div class="panel-body conditions">
+                    <div class="cond-row"><span>Humidity</span><b id="wdHumidity">--</b></div>
+                    <div class="cond-row"><span>Wind</span><b id="wdWind">--</b></div>
+                    <div class="cond-row"><span>Feels like</span><b id="wdFeels">--</b></div>
+                    <div class="cond-row"><span>Data source</span><b>OpenWeather · OSM</b></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row g-3 mt-1">
+        <div class="col-lg-7">
+            <div class="panel h-100">
+                <div class="panel-head">
+                    <h6>City Risk Map</h6>
+                    <small class="text-secondary-custom" id="mapUpdated"></small>
+                </div>
+                <div id="osmMap"></div>
+            </div>
+        </div>
+
+        <div class="col-lg-5 d-flex flex-column gap-3">
+            <div class="panel">
+                <div class="panel-head"><h6>Traffic Volume</h6><small class="text-secondary-custom">rolling window</small></div>
+                <div class="chart-box"><canvas id="volumeChart"></canvas></div>
+            </div>
+            <div class="panel flex-grow-1">
+                <div class="panel-head"><h6>Vehicle Breakdown</h6></div>
+                <div class="chart-box"><canvas id="vehicleTypesChart"></canvas></div>
+            </div>
+        </div>
+    </div>
+
+    <footer class="app-footer">
+        Data: OpenStreetMap contributors · OpenWeather · YOLOv8 edge detection — for learning &amp; demo purposes
+    </footer>
+</main>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<script src="js/main.js"></script>
+</body>
+</html>
