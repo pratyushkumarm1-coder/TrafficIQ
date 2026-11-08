@@ -1,0 +1,38 @@
+[
+  {
+    "id": 1794063242346,
+    "lat": 20.390739942972495,
+    "lng": 85.71620107125337,
+    "label": "Reported incident",
+    "risk_level": "LOW",
+    "vehicles": 17,
+    "reported_at": "2026-11-07T20:24:02"
+  },
+  {
+    "id": 1789572985468,
+    "lat": 20.5,
+    "lng": 85.86,
+    "label": "Reported incident",
+    "risk_level": "LOW",
+    "vehicles": 8,
+    "reported_at": "2026-09-16T21:06:25"
+  },
+  {
+    "id": 1789572394270,
+    "lat": 20.5,
+    "lng": 85.86,
+    "label": "Reported incident",
+    "risk_level": "MODERATE",
+    "vehicles": 3,
+    "reported_at": "2026-09-16T20:56:34"
+  },
+  {
+    "id": 1789572071800,
+    "lat": 20.5,
+    "lng": 85.86,
+    "label": "Reported incident",
+    "risk_level": "LOW",
+    "vehicles": 6,
+    "reported_at": "2026-09-16T20:51:11"
+  }
+]
